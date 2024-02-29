@@ -56,17 +56,20 @@ exports.createHotel = async (req, res)=>{
             message: "New hotel created",
             data: newHotel
         })
-    }catch{
+    }catch(err){
         res.status(404).json({
             status: 'failed',
-            message:err
+            message:err.message
         })
     }    
 };
  
 exports.getHotel = async (req,res)=>{
     try{
-        const hotel = await Hotel.findById(req.params.id)
+        const hotel = await Hotel.findById(req.params.id).populate({
+            path:'managers',
+            select:'-__V'
+        })
         res
     .status(200)
     .json({
